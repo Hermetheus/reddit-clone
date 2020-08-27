@@ -36,6 +36,7 @@
     "expres": "^0.0.5",
     "graphql": "^15.3.0",
     "pg": "^8.3.2",
+    "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.0.0"
   }
 }
