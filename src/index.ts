@@ -1,6 +1,9 @@
 import { MikroORM } from "@mikro-orm/core";
 import { ApolloServer } from "apollo-server-express";
+import connectRedis from "connect-redis";
 import express from "express";
+import session from "express-session";
+import redis from "redis";
 import "reflect-metadata";
 import { buildSchema } from "type-graphql";
 import microConfig from "./mikro-orm.config";
@@ -14,6 +17,17 @@ const main = async () => {
   await orm.getMigrator().up();
 
   const app = express();
+
+  const RedisStore = connectRedis(session);
+  const redisClient = redis.createClient();
+
+  app.use(
+    session({
+      store: new RedisStore({ client: redisClient }),
+      secret: "keyboard cat",
+      resave: false,
+    })
+  );
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
